@@ -1,3 +1,4 @@
+/* Import Google font - Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 * {
@@ -314,6 +315,11 @@ header .buttons i:last-child:hover {
     padding: 10px 25px;
     font-size: 1.05rem;
   }
+  
+}
+body {
+  transition: background-color 0.3s, color 0.8s;
+}
 
 .dark-mode {
   background-color: #111111;
@@ -332,11 +338,11 @@ header .buttons i:last-child:hover {
 }
 
 .dark-mode .photographer {
-  color: #5f666d;
+  color: #808080;
 }
 
 .dark-mode .photographer i {
-  color: #5f666d;
+  color: #808080;
 }
 
 .dark-mode .search-box input {
@@ -348,9 +354,5 @@ header .buttons i:last-child:hover {
 }
 
 .dark-mode .details button {
-  background-color: #5f666d;
-}
-}
-body {
-  transition: background-color 0.5s, color 2s;
+  background-color: #808080;
 }
