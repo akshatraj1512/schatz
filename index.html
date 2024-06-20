@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title>Schatz Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <script src="script.js" defer></script>
   </head>
-  <body>
- 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <title>Schatz Image Search Engine</title>
@@ -17,10 +18,14 @@
 <body>
   <div class="search">
     <!-- Search Content Here -->
-    <img src="images/search-img.jpg" alt="Search Background">
+    <img src="images/rose.png" alt="Search Background">
     <div class="content">
+      <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+      </div>
       <h1>Schatz Gallery</h1>
       <p>Find all the treasured images</p>
+      
       <div class="search-box">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Search for images...">

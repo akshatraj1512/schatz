@@ -6,6 +6,13 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+body {
+  transition: background-color 0.5s, color 0.5s;
+}
+.dark-mode {
+  background-color: #111111;
+  color: #e0e0e0;
+}
 .search {
   height: 40vh;
   display: flex;
@@ -36,12 +43,14 @@
   position: relative;
 }
 .search h1 {
-  font-size: 2.65rem;
-  font-weight: 600;
+  font-family: "Mr Dafoe", cursive;
+  font-size: 2.65rem; 
+  font-weight: 400;
 }
 .search p {
   margin-top: 8px;
-  font-size: 1.5rem;
+  font-size: 0.8rem !important; 
+  font-weight: 400;
 }
 .search .search-box {
   height: 55px;
