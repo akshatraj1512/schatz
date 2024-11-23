@@ -220,6 +220,41 @@ button, i {
   transform: translate(-50%, -50%) scale(1);
 }
 
+.lightbox .wrapper .buttons .download-btn {
+  text-decoration: none;
+  color: #fff;
+  background: #fff;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-left: 10px;
+  transition: background 0.2s ease;
+}
+
+.lightbox .wrapper .buttons .download-btn:hover {
+  background: #bebebe;
+}
+
+/* Lightbox download button */
+.lightbox .download-btn {
+  background-color: #666;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.lightbox .download-btn:hover {
+  background-color: #;
+}
+
+.lightbox .download-btn i {
+  margin-right: 8px;
+}
+
 .wrapper header {
   display: flex;
   align-items: center;
@@ -247,13 +282,13 @@ header .buttons i {
   font-size: 1.2rem;
   line-height: 40px;
   text-align: center;
-  background: #8A6CFF;
+  background: #666;
   border-radius: 4px;
   transition: 0.2s ease;
 }
 
 header .buttons i:first-child:hover {
-  background: #704dff;
+  background: #666;
 }
 
 header .buttons i:last-child {
@@ -355,4 +390,33 @@ body {
 
 .dark-mode .details button {
   background-color: #808080;
+}
+
+body.dark-mode .lightbox {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+body.dark-mode .lightbox .wrapper {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .lightbox .wrapper .photographer {
+  color: #bdbdbd;
+}
+
+body.dark-mode .lightbox .buttons i {
+  background: #333;
+}
+
+body.dark-mode .lightbox .buttons i:hover {
+  background: #555;
+}
+
+body.dark-mode .lightbox .buttons .download-btn {
+  background: #444;
+}
+
+body.dark-mode .lightbox .buttons .download-btn:hover {
+  background: #666;
 }

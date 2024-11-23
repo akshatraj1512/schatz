@@ -1,46 +1,72 @@
+// Selectors for DOM elements
 const imageWrapper = document.querySelector(".images");
 const searchInput = document.querySelector(".search input");
 const loadMoreBtn = document.querySelector(".gallery .load-more");
 const lightbox = document.querySelector(".lightbox");
-const downloadImgBtn = lightbox.querySelector(".uil-import");
+const lightboxImg = lightbox.querySelector(".img");
+const downloadImgBtn = lightbox.querySelector(".download-btn");
 const closeImgBtn = lightbox.querySelector(".close-icon");
 
-// API key, paginations, searchTerm variables
+// API key, pagination, and search variables
 const apiKey = "gtLNIM9PvCWqMp5YpVH1QQshHhguXwDiRFrVKGhnJaGlUD8N6fFlfMvh";
 const perPage = 15;
 let currentPage = 1;
 let searchTerm = null;
 
+// Download an image
 const downloadImg = (imgUrl) => {
-    // Converting received img to blob, creating its download link, & downloading it
-    fetch(imgUrl).then(res => res.blob()).then(blob => {
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = imgUrl.split('/').pop();
-        a.click();
-    }).catch(() => alert("Failed to download image!"));
-}
+    fetch(imgUrl)
+        .then((res) => {
+            // Check if the fetch was successful
+            if (!res.ok) {
+                throw new Error(`Failed to fetch the image. Status: ${res.status}`);
+            }
+            return res.blob();
+        })
+        .then((blob) => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = imgUrl.split('/').pop(); // Extract filename from URL
+            a.click();
+        })
+       
+};
 
+
+// Show lightbox
 const showLightbox = (name, img) => {
-    // Showing lightbox and setting img source, name and button attribute
-    lightbox.querySelector("img").src = img;
-    lightbox.querySelector("span").innerText = name;
-    downloadImgBtn.setAttribute("data-img", img);
+    lightboxImg.src = img; // Set lightbox image
+    lightbox.querySelector("span").innerText = name; // Set photographer name
+    downloadImgBtn.href = img; // Update download button link
+    downloadImgBtn.setAttribute("download", img.split('/').pop()); // Set download filename
     lightbox.classList.add("show");
-    document.body.style.overflow = "hidden";
-}
+    document.body.style.overflow = "hidden"; // Prevent scrolling
+};
 
+// Hide lightbox
 const hideLightbox = () => {
-    // Hiding lightbox on close icon click
     lightbox.classList.remove("show");
-    document.body.style.overflow = "auto";
-}
+    document.body.style.overflow = "auto"; // Restore scrolling
+};
 
+// Handle manually uploaded images
+const attachLightboxToStaticImages = () => {
+    document.querySelectorAll(".card img").forEach((img) => {
+        img.addEventListener("click", () => {
+            const photographerName = img.parentNode.querySelector(".photographer span").innerText;
+            const imgSrc = img.getAttribute("src");
+            showLightbox(photographerName, imgSrc);
+        });
+    });
+};
+
+// Generate HTML for dynamically fetched images
 const generateHTML = (images) => {
-    // Making li of all fetched images and adding them to the existing image wrapper
-    imageWrapper.innerHTML += images.map(img =>
-        `<li class="card">
-            <img onclick="showLightbox('${img.photographer}', '${img.src.large2x}')" src="${img.src.large2x}" alt="img">
+    imageWrapper.innerHTML += images
+        .map(
+            (img) => `
+        <li class="card">
+            <img data-img="${img.src.large2x}" src="${img.src.large2x}" alt="${img.photographer}">
             <div class="details">
                 <div class="photographer">
                     <i class="uil uil-camera"></i>
@@ -51,61 +77,86 @@ const generateHTML = (images) => {
                 </button>
             </div>
         </li>`
-    ).join("");
+        )
+        .join("");
 
-    // Adding event listeners to the new download buttons
-    document.querySelectorAll(".download-btn").forEach(button => {
+    // Add event listeners for dynamic download buttons
+    document.querySelectorAll(".download-btn").forEach((button) => {
         button.addEventListener("click", (e) => {
             e.preventDefault();
             downloadImg(button.getAttribute("data-img"));
         });
     });
-}
 
+    // Add lightbox support for dynamic images
+    document.querySelectorAll(".card img").forEach((img) => {
+        img.addEventListener("click", () => {
+            const photographerName = img.parentNode.querySelector(".photographer span").innerText;
+            const imgSrc = img.getAttribute("data-img");
+            showLightbox(photographerName, imgSrc);
+        });
+    });
+};
+
+// Fetch images from the API
 const getImages = (apiURL) => {
-    // Fetching images by API call with authorization header
     searchInput.blur();
     loadMoreBtn.innerText = "Loading...";
     loadMoreBtn.classList.add("disabled");
     fetch(apiURL, {
-        headers: { Authorization: apiKey }
-    }).then(res => res.json()).then(data => {
-        generateHTML(data.photos);
-        loadMoreBtn.innerText = "Load More";
-        loadMoreBtn.classList.remove("disabled");
-    }).catch(() => alert("Failed to load images!"));
-}
+        headers: { Authorization: apiKey },
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            generateHTML(data.photos);
+            loadMoreBtn.innerText = "Load More";
+            loadMoreBtn.classList.remove("disabled");
+        })
+        .catch(() => alert("Failed to load images!"));
+};
 
+// Load more images
 const loadMoreImages = () => {
-    currentPage++; // Increment currentPage by 1
-    // If searchTerm has some value then call API with search term else call default API
+    currentPage++;
     let apiUrl = `https://api.pexels.com/v1/curated?page=${currentPage}&per_page=${perPage}`;
-    apiUrl = searchTerm ? `https://api.pexels.com/v1/search?query=${searchTerm}&page=${currentPage}&per_page=${perPage}` : apiUrl;
+    apiUrl = searchTerm
+        ? `https://api.pexels.com/v1/search?query=${searchTerm}&page=${currentPage}&per_page=${perPage}`
+        : apiUrl;
     getImages(apiUrl);
-}
+};
 
+// Load search results
 const loadSearchImages = (e) => {
-    // If the search input is empty, set the search term to null and return from here
-    if (e.target.value === "") return searchTerm = null;
-    // If pressed key is Enter, update the current page, search term & call the getImages
+    if (e.target.value === "") return (searchTerm = null);
     if (e.key === "Enter") {
         currentPage = 1;
         searchTerm = e.target.value;
-        imageWrapper.innerHTML = "";
-        getImages(`https://api.pexels.com/v1/search?query=${searchTerm}&page=1&per_page=${perPage}`);
+        imageWrapper.innerHTML = ""; // Clear previous results
+        getImages(
+            `https://api.pexels.com/v1/search?query=${searchTerm}&page=1&per_page=${perPage}`
+        );
     }
-}
+};
 
-// Initial API call to get curated images
-getImages(`https://api.pexels.com/v1/curated?page=${currentPage}&per_page=${perPage}`);
-
-// Event listeners for load more and search functionality
-loadMoreBtn.addEventListener("click", loadMoreImages);
-searchInput.addEventListener("keyup", loadSearchImages);
-closeImgBtn.addEventListener("click", hideLightbox);
-downloadImgBtn.addEventListener("click", (e) => downloadImg(e.target.dataset.img));
-
+// Toggle dark mode
 function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle("dark-mode");
-  }
+}
+
+// Initial API call to load curated images
+getImages(
+    `https://api.pexels.com/v1/curated?page=${currentPage}&per_page=${perPage}`
+);
+
+// Attach lightbox functionality to manually uploaded images
+attachLightboxToStaticImages();
+
+// Event listeners
+loadMoreBtn.addEventListener("click", loadMoreImages);
+searchInput.addEventListener("keyup", loadSearchImages);
+closeImgBtn.addEventListener("click", hideLightbox);
+downloadImgBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    downloadImg(downloadImgBtn.href);
+});
