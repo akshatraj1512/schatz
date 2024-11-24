@@ -51,9 +51,9 @@ const hideLightbox = () => {
 const attachLightboxToStaticImages = () => {
     document.querySelectorAll(".card img").forEach((img) => {
         img.addEventListener("click", () => {
-            const photographerName = img.parentNode.querySelector(".photographer span").innerText;
-            const imgSrc = img.getAttribute("src");
-            showLightbox(photographerName, imgSrc);
+            const photographerName = img.closest(".card").querySelector(".photographer span").innerText;
+            const imgSrc = img.getAttribute("src"); // Get the image source
+            showLightbox(photographerName, imgSrc); // Pass to lightbox
         });
     });
 };
